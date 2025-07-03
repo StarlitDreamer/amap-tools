@@ -34,7 +34,7 @@ const inputs = reactive([
 ]);
 
 const polylines = [];
-const markers = [];
+const labels = [];
 
 const onMapInit = (m) => {
   map.value = m;
@@ -64,18 +64,21 @@ function drawLine(index) {
   polyline.setMap(map.value);
   polylines.push(polyline);
 
-  // 添加坐标点标记
-  coords.forEach(([lng, lat], i) => {
-    const marker = new window.AMap.Marker({
+  // 添加文本标注显示坐标点
+  coords.forEach(([lng, lat]) => {
+    const labelMarker = new window.AMap.Text({
+      text: `${lng.toFixed(6)},${lat.toFixed(6)}`,
       position: [lng, lat],
-      label: {
-        content: `${lng.toFixed(6)},${lat.toFixed(6)}`,
-        offset: new window.AMap.Pixel(10, -20),
+      offset: new window.AMap.Pixel(-60, -20),
+      style: {
+        background: 'white',
+        border: '1px solid #999',
+        padding: '2px 4px',
+        fontSize: '12px'
       },
-      icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
       map: map.value
     });
-    markers.push(marker);
+    labels.push(labelMarker);
   });
 
   map.value.setFitView([polyline]);
@@ -89,12 +92,12 @@ function clearAllPolylines() {
   });
   polylines.length = 0;
 
-  markers.forEach(marker => {
-    if (map.value && marker) {
-      map.value.remove(marker);
+  labels.forEach(label => {
+    if (map.value && label) {
+      map.value.remove(label);
     }
   });
-  markers.length = 0;
+  labels.length = 0;
 }
 </script>
 
