@@ -11,7 +11,7 @@
           v-for="(item, index) in inputs"
           :key="index"
           v-model="item.text"
-          :placeholder="`路线${index + 1}（${item.color}线）请输入经纬度对`"
+          :placeholder="`路线${index + 1}（${item.color}线）请输入经纬度对,回车查询`"
           @keyup.enter.native="drawLine(index)"
           clearable
         />
@@ -85,6 +85,9 @@ function drawLine(index) {
 }
 
 function clearAllPolylines() {
+  inputs.forEach(element => {
+    element.text=''
+  });
   polylines.forEach(polyline => {
     if (map.value && polyline) {
       map.value.remove(polyline);
