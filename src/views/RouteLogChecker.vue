@@ -15,6 +15,7 @@
           @keyup.enter.native="drawLine(index)"
           clearable
         />
+        <el-button type="danger" @click="clearAllPolylines">清除全部路线</el-button>
       </div>
     </MyMap>
   </div>
@@ -62,6 +63,15 @@ function drawLine(index) {
   polyline.setMap(map.value);
   polylines.push(polyline);
   map.value.setFitView([polyline]);
+}
+
+function clearAllPolylines() {
+  polylines.forEach(polyline => {
+    if (map.value && polyline) {
+      map.value.remove(polyline);
+    }
+  });
+  polylines.length = 0;
 }
 </script>
 
