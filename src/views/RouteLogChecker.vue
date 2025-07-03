@@ -34,6 +34,7 @@ const inputs = reactive([
 ]);
 
 const polylines = [];
+const markers = [];
 
 const onMapInit = (m) => {
   map.value = m;
@@ -52,6 +53,7 @@ function drawLine(index) {
 
   if (!coords.length || !window.AMap || !map.value) return;
 
+  // 绘制折线
   const polyline = new window.AMap.Polyline({
     path: coords,
     strokeColor: input.color,
@@ -59,9 +61,23 @@ function drawLine(index) {
     strokeOpacity: 1,
     lineJoin: 'round'
   });
-
   polyline.setMap(map.value);
   polylines.push(polyline);
+
+  // 添加坐标点标记
+  coords.forEach(([lng, lat], i) => {
+    const marker = new window.AMap.Marker({
+      position: [lng, lat],
+      label: {
+        content: `${lng.toFixed(6)},${lat.toFixed(6)}`,
+        offset: new window.AMap.Pixel(10, -20),
+      },
+      icon: 'https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png',
+      map: map.value
+    });
+    markers.push(marker);
+  });
+
   map.value.setFitView([polyline]);
 }
 
@@ -72,6 +88,13 @@ function clearAllPolylines() {
     }
   });
   polylines.length = 0;
+
+  markers.forEach(marker => {
+    if (map.value && marker) {
+      map.value.remove(marker);
+    }
+  });
+  markers.length = 0;
 }
 </script>
 
